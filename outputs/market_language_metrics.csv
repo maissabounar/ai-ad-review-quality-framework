@@ -1,0 +1,9 @@
+market,language,total_cases,llm_accuracy,human_accuracy,human_ai_agreement_rate,advertiser_over_rejection_rate,policy_risk_miss_rate,avg_review_time_seconds,appeal_reversal_rate
+BR,Portuguese,663.0,0.6471,0.7738,0.5158,0.1735,0.1795,116.5,0.1887
+DE,German,629.0,0.6789,0.841,0.5628,0.1335,0.1876,119.0,0.2195
+ES,Spanish,529.0,0.7335,0.8658,0.6465,0.1323,0.1342,120.5,0.1053
+FR,French,599.0,0.6728,0.823,0.5743,0.1536,0.1736,117.0,0.0885
+IT,Italian,477.0,0.6143,0.8176,0.5283,0.1803,0.2055,120.7,0.1286
+MX,Spanish,577.0,0.6811,0.8094,0.5789,0.1525,0.1664,122.9,0.191
+UK,English,737.0,0.7829,0.863,0.6839,0.0882,0.1289,120.1,0.2323
+US,English,789.0,0.8175,0.872,0.7199,0.0786,0.1039,118.6,0.1259

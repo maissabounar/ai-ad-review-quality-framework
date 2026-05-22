@@ -1,0 +1,16 @@
+bpo_team,reviewer_tenure,total_cases,human_accuracy,human_golden_agreement,human_ai_agreement,error_rate,avg_review_time_seconds,appeal_reversal_rate,top_error_policy_category
+BPO_A,experienced,344,0.9099,0.9099,0.6541,0.0901,97.7,0.1818,Safe Ad
+BPO_A,intermediate,387,0.8605,0.8605,0.6047,0.1395,107.5,0.1333,Safe Ad
+BPO_A,new,241,0.8008,0.8008,0.5436,0.1992,152.5,0.15,Safe Ad
+BPO_B,experienced,361,0.9335,0.9335,0.651,0.0665,97.4,0.1731,Safe Ad
+BPO_B,intermediate,385,0.8701,0.8701,0.6727,0.1299,115.8,0.1296,Safe Ad
+BPO_B,new,267,0.794,0.794,0.6142,0.206,156.6,0.1778,Misleading Claim
+BPO_C,experienced,326,0.9049,0.9049,0.6442,0.0951,100.5,0.0769,Brand Safety Risk
+BPO_C,intermediate,422,0.8199,0.8199,0.6114,0.1801,114.9,0.1324,Safe Ad
+BPO_C,new,255,0.7451,0.7451,0.5804,0.2549,162.2,0.1389,Safe Ad
+BPO_D,experienced,356,0.8399,0.8399,0.5899,0.1601,91.0,0.1905,Safe Ad
+BPO_D,intermediate,427,0.7822,0.7822,0.5948,0.2178,114.6,0.194,Safe Ad
+BPO_D,new,256,0.7109,0.7109,0.5195,0.2891,166.2,0.2143,Safe Ad
+BPO_E,experienced,363,0.8871,0.8871,0.6391,0.1129,97.8,0.1525,Safe Ad
+BPO_E,intermediate,370,0.8216,0.8216,0.5865,0.1784,122.8,0.1186,Health Claim
+BPO_E,new,240,0.7458,0.7458,0.5417,0.2542,147.6,0.2258,Safe Ad

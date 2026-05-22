@@ -1,0 +1,34 @@
+dimension,value,total_appeals,reversals,reversal_rate
+policy_category,Adult or Suggestive Content,67.0,8.0,0.1194
+policy_category,Brand Safety Risk,61.0,6.0,0.0984
+policy_category,Financial Product Claim,83.0,11.0,0.1325
+policy_category,Health Claim,67.0,7.0,0.1045
+policy_category,Landing Page Issue,54.0,14.0,0.2593
+policy_category,Misleading Claim,111.0,19.0,0.1712
+policy_category,Political or Sensitive Content,44.0,8.0,0.1818
+policy_category,Restricted Product,80.0,16.0,0.2
+policy_category,Safe Ad,80.0,19.0,0.2375
+policy_category,Scam or Suspicious Offer,123.0,14.0,0.1138
+llm_label,approved,143.0,41.0,0.2867
+llm_label,approved_limited,228.0,37.0,0.1623
+llm_label,escalated,92.0,11.0,0.1196
+llm_label,rejected,307.0,33.0,0.1075
+bpo_team,BPO_A,155.0,24.0,0.1548
+bpo_team,BPO_B,151.0,24.0,0.1589
+bpo_team,BPO_C,143.0,17.0,0.1189
+bpo_team,BPO_D,172.0,34.0,0.1977
+bpo_team,BPO_E,149.0,23.0,0.1544
+advertiser_tier,enterprise,223.0,36.0,0.1614
+advertiser_tier,mid_market,233.0,33.0,0.1416
+advertiser_tier,small_business,205.0,35.0,0.1707
+advertiser_tier,strategic_account,109.0,18.0,0.1651
+industry_vertical,Beauty,68.0,13.0,0.1912
+industry_vertical,E-commerce,81.0,12.0,0.1481
+industry_vertical,Education,72.0,13.0,0.1806
+industry_vertical,Finance,69.0,9.0,0.1304
+industry_vertical,Food and Beverage,105.0,20.0,0.1905
+industry_vertical,Gaming,76.0,5.0,0.0658
+industry_vertical,Health and Wellness,83.0,9.0,0.1084
+industry_vertical,Mobile Apps,72.0,16.0,0.2222
+industry_vertical,Retail,74.0,16.0,0.2162
+industry_vertical,Travel,70.0,9.0,0.1286
