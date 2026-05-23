@@ -1,127 +1,242 @@
 # Recommendations
 
-Based on analysis of 5000 ad review cases across 10 policy categories, 8 markets, and 5 BPO teams. Each recommendation targets a specific failure mode with a concrete action, owner, and success metric.
+These recommendations turn the quality analysis into actions for model teams, policy teams, Ad Ops, and BPO quality.
+
+They focus on three priorities:
+
+- reduce policy risk misses
+- improve reviewer calibration
+- create a usable feedback loop for model improvement
 
 ---
 
-## 1. Route Low-Confidence LLM Decisions to Human Review
+## 1. Route Low-Confidence AI Decisions to Human Review
 
-**Problem**: LLM decisions with confidence below 0.60 have significantly higher error rates than high-confidence decisions. They are currently treated identically.
+**Issue**
 
-**Action**: Implement an automatic routing rule: any LLM decision with `llm_confidence_score < 0.60` must be queued for human review before the decision is finalized.
+AI decisions below 0.60 confidence have higher error rates, but they are currently treated like any other decision.
 
-**Expected impact**: Reduced policy risk misses and over-rejections on uncertain cases. Most benefit in Health Claim, Financial Product Claim, and Landing Page Issue.
+**Action**
 
-**Owner**: Algorithm Team + Ad Operations
+Route every case below the confidence threshold to mandatory human review before final decisioning.
 
-**Success metric**: Error rate for low-confidence cases decreases by ≥20% within 60 days.
+```python
+llm_confidence_score < 0.60
+```
 
----
+**Why it matters**
 
-## 2. BPO Calibration for High-Disagreement Categories
+This is the fastest operational fix. It reduces avoidable errors without waiting for a model update.
 
-**Problem**: Human reviewers show elevated error rates in Health Claim, Financial Product Claim, Political Content, and Misleading Claim. New reviewers are worst affected in all four.
+**Owner**
 
-**Action**: Monthly calibration sessions on these four categories. Use reversed appeal cases and golden label disagreements as training material. Track error rates by reviewer cohort before and after.
+Algorithm Team + Ad Operations
 
-**Expected impact**: Lower human reviewer error rate, especially for new and intermediate reviewers. More consistent scores across BPO teams.
+**Success metric**
 
-**Owner**: BPO Quality Lead
-
-**Success metric**: New reviewer error rate in target categories decreases by ≥15% within 90 days.
-
----
-
-## 3. Extract High-Confidence Wrong LLM Decisions as Model Feedback
-
-**Problem**: High-confidence wrong decisions are the most damaging LLM errors. They are not currently extracted for model improvement.
-
-**Action**: Export monthly: cases where `llm_confidence_score > 0.75` AND `is_llm_correct == False` AND `risk_level in ['medium', 'high']`. Share with the algorithm team as a labelled feedback set with golden labels and error type annotations.
-
-**Expected impact**: Model retraining on these cases reduces high-confidence errors in Health Claim, Financial Product Claim, and Landing Page Issue.
-
-**Owner**: Algorithm Team + Quality Analyst
-
-**Success metric**: High-confidence error rate decreases by ≥10% over two model release cycles.
+Low-confidence error rate down by 20% within 60 days.
 
 ---
 
-## 4. Market-Specific Policy Calibration for Non-English Markets
+## 2. Calibrate Reviewers on High-Disagreement Categories
 
-**Problem**: BR, IT, DE, ES, and MX consistently show higher disagreement rates than US/UK. Local policy nuance is not reflected in current model training or reviewer guidelines.
+**Issue**
 
-**Action**:
-- Develop market-specific policy supplements for each non-English market
-- Translate key policy examples into local languages
-- Add market-tagged training examples to the LLM feedback set
-- Run calibration workshops with BPO teams assigned to these markets
+Reviewer errors are concentrated in Health Claim, Financial Product Claim, Political Content, and Misleading Claim. New reviewers are the most exposed.
 
-**Expected impact**: Reduced market nuance errors and lower disagreement rates in non-English markets.
+**Action**
 
-**Owner**: Regional Policy Team + BPO Quality
+Run monthly calibration sessions using:
 
-**Success metric**: Disagreement rate in BR and IT within 5 pp of the US/UK baseline within 6 months.
+- reversed appeals
+- golden label disagreements
+- high-risk approval misses
+- ambiguous policy cases
 
----
+Track error rates before and after by reviewer tenure and BPO team.
 
-## 5. Weekly Monitoring of High-Risk Approval Misses
+**Why it matters**
 
-**Problem**: High-risk approval misses — high-risk ads approved by the LLM when they should have been limited, rejected, or escalated — are not systematically tracked.
+Reviewer quality is trainable. The gap between new and experienced reviewers points to onboarding and calibration, not only individual performance.
 
-**Action**: Weekly automated report surfacing all new high-risk approval misses. Senior policy or quality analyst review within 3 business days. Escalation threshold to legal or compliance for severe cases.
+**Owner**
 
-**Expected impact**: Faster detection and remediation. Reduced risk of non-compliant content reaching live inventory.
+BPO Quality Lead
 
-**Owner**: Ad Operations + Quality Lead
+**Success metric**
 
-**Success metric**: Time-to-detection for high-risk approval misses ≤3 business days.
-
----
-
-## 6. Review Over-Rejection Patterns to Reduce Advertiser Friction
-
-**Problem**: A meaningful share of rejected or limited ads were classified more strictly than the golden label warrants. Many generate appeals, and a significant proportion of those are reversed.
-
-**Action**:
-- Review policy thresholds for the Safe Ad category (most affected by over-rejection)
-- Audit over-rejection patterns by market and advertiser tier
-- Use reversed appeals to recalibrate decision thresholds
-- Quarterly review where policy and operations teams review the over-rejection rate together
-
-**Expected impact**: Lower appeal submission rate from legitimate advertisers. Improved advertiser trust.
-
-**Owner**: Policy Team + Ad Operations
-
-**Success metric**: Over-rejection rate decreases by ≥10% within 90 days.
+New reviewer error rate in target categories down by 15% within 90 days.
 
 ---
 
-## 7. Cross-Functional Quality Feedback Loop
+## 3. Use High-Confidence Wrong AI Decisions for Model Feedback
 
-**Problem**: Quality insights stay within each team. BPO quality observations do not systematically reach the policy team, and policy ambiguity cases are not fed back to the algorithm team.
+**Issue**
 
-**Action**: Monthly cross-functional quality review with representatives from:
-- BPO Quality (calibration data)
-- Policy Team (guideline updates)
-- Algorithm Team (model feedback examples)
-- Ad Operations (appeal reversal data)
+The most useful model feedback cases are not all errors. They are the cases where the AI was wrong and confident.
 
-Review the top 5 disagreement categories each session and assign follow-up actions. Track resolution.
+**Action**
 
-**Owner**: Quality Lead (coordinator)
+Export a monthly feedback set:
 
-**Success metric**: All top-5 disagreement categories have an assigned action within 2 weeks of each monthly review.
+```python
+llm_confidence_score > 0.75
+and is_llm_correct == False
+and risk_level in ["medium", "high"]
+```
+
+Include:
+
+- golden label
+- AI label
+- policy category
+- error type
+- market
+- appeal result when available
+
+**Why it matters**
+
+These cases show where the model is confidently wrong. They are more valuable for retraining than random error samples.
+
+**Owner**
+
+Algorithm Team + Quality Analyst
+
+**Success metric**
+
+High-confidence error rate down by 10% over two model releases.
+
+---
+
+## 4. Add Local Policy Calibration for Non-English Markets
+
+**Issue**
+
+BR, IT, DE, ES, and MX show higher disagreement than US and UK markets.
+
+**Action**
+
+Create market-specific policy supplements with:
+
+- local examples
+- translated policy guidance
+- market-specific escalation rules
+- market-tagged model feedback examples
+
+Run calibration workshops with the BPO teams reviewing these markets.
+
+**Why it matters**
+
+Generic policy guidance misses local nuance. This creates both over-rejection and risk misses.
+
+**Owner**
+
+Regional Policy + BPO Quality
+
+**Success metric**
+
+BR and IT disagreement rates within 5 pp of the US/UK baseline within 6 months.
+
+---
+
+## 5. Monitor High-Risk Approval Misses Weekly
+
+**Issue**
+
+High-risk approval misses are the most severe failure mode: risky ads approved by the AI when they should have been limited, rejected, or escalated.
+
+**Action**
+
+Create a weekly report of all new high-risk approval misses.
+
+Each case should be reviewed within 3 business days by a senior policy or quality analyst.
+
+Severe cases should be escalated to legal or compliance.
+
+**Why it matters**
+
+These are the cases with the highest policy exposure. They need fast review, not monthly reporting.
+
+**Owner**
+
+Ad Operations + Quality Lead
+
+**Success metric**
+
+Time to detection below 3 business days.
+
+---
+
+## 6. Reduce Over-Rejection and Avoidable Appeals
+
+**Issue**
+
+Some ads are rejected or limited more strictly than the golden label supports. Many of these cases generate appeals, and some are reversed.
+
+**Action**
+
+Review over-rejection patterns by:
+
+- policy category
+- market
+- advertiser tier
+- appeal outcome
+
+Use reversed appeals to recalibrate decision thresholds.
+
+**Why it matters**
+
+Over-rejection does not create policy exposure, but it damages advertiser trust and slows campaigns.
+
+**Owner**
+
+Policy Team + Ad Operations
+
+**Success metric**
+
+Over-rejection rate down by 10% within 90 days.
+
+---
+
+## 7. Create a Monthly Quality Feedback Loop
+
+**Issue**
+
+Quality signals are scattered across teams. Model errors, policy ambiguity, BPO calibration gaps, and appeal reversals need one shared review process.
+
+**Action**
+
+Run a monthly quality review with:
+
+- BPO Quality
+- Policy
+- Algorithm
+- Ad Operations
+
+Review the top disagreement categories, assign owners, and track follow-up actions.
+
+**Why it matters**
+
+The same issues often appear across model, reviewer, and policy signals. Reviewing them together prevents isolated fixes.
+
+**Owner**
+
+Quality Lead
+
+**Success metric**
+
+Top 5 disagreement categories have assigned actions within 2 weeks.
 
 ---
 
 ## Summary
 
-| # | Action | Owner | Priority |
-|---|---|---|---|
-| 1 | Route low-confidence LLM decisions to human review | Algorithm + Ad Ops | High |
-| 2 | BPO calibration for high-disagreement categories | BPO Quality | High |
-| 3 | Extract high-confidence wrong LLM decisions for model feedback | Algorithm | High |
-| 4 | Market-specific policy calibration for non-English markets | Policy + BPO | Medium |
-| 5 | Weekly monitoring of high-risk approval misses | Ad Ops + Quality | High |
-| 6 | Review over-rejection patterns | Policy + Ad Ops | Medium |
-| 7 | Cross-functional quality feedback loop | Quality Lead | Medium |
+| Priority | Recommendation | Owner |
+|---|---|---|
+| High | Route low-confidence AI decisions to human review | Algorithm + Ad Ops |
+| High | Calibrate reviewers on high-disagreement categories | BPO Quality |
+| High | Use high-confidence wrong AI decisions for model feedback | Algorithm + Quality |
+| High | Monitor high-risk approval misses weekly | Ad Ops + Quality |
+| Medium | Add local policy calibration for non-English markets | Regional Policy + BPO Quality |
+| Medium | Reduce over-rejection and avoidable appeals | Policy + Ad Ops |
+| Medium | Create a monthly quality feedback loop | Quality Lead |
